@@ -122,7 +122,7 @@ opt.wildmode = "list:longest"
 opt.scrolloff = 999
 
 -- Use mouse to select and resize windows, etc.
-opt.mouse = "n"
+opt.mouse = "a"
 opt.mousemodel = "popup" -- Set the behaviour of mouse
 opt.mousescroll = { "ver:1", "hor:0" }
 
