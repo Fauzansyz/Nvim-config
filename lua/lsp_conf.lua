@@ -71,6 +71,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<C-k>", vim.lsp.buf.signature_help)
     map("n", "<space>rn", vim.lsp.buf.rename, { desc = "variable rename" })
     map("n", "<space>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
+    map("n", "<space>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, { desc = "LSP format document" })
     map("n", "<space>wa", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
     map("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, { desc = "remove workspace folder" })
     map("n", "<space>wl", function()
@@ -81,6 +84,35 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- Disable ruff hover feature in favor of Pyright
     if client.name == "ruff" then
       client.server_capabilities.hoverProvider = false
+    end
+
+    -- Auto-format on save if client supports it
+    if client:supports_method("textDocument/formatting") then
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("lsp_format_" .. bufnr, { clear = true }),
+        buffer = bufnr,
+        callback = function()
+          vim.lsp.buf.format({
+            bufnr = bufnr,
+            async = false,
+            timeout_ms = 5000,
+            filter = function(fmt_client)
+              -- Prefer prettier over the html LSP formatter if prettier is available
+              if fmt_client.name == "html" then
+                return vim.fn.executable("prettier") == 0
+              end
+              -- Prefer eslint formatting over ts_ls if both are active
+              if fmt_client.name == "ts_ls" then
+                if vim.fn.executable("prettier") == 1 then
+                  return false
+                end
+                return #vim.lsp.get_clients({ bufnr = bufnr, name = "eslint" }) == 0
+              end
+              return true
+            end,
+          })
+        end,
+      })
     end
   end,
   nested = true,
@@ -122,6 +154,13 @@ local enabled_lsp_servers = {
 
   ts_ls = { exe = "typescript-language-server", optional = true },
   eslint = { exe = "vscode-eslint-language-server", optional = true },
+
+  -- HTML: install via `npm install -g vscode-langservers-extracted`
+  html = { exe = "vscode-html-language-server", optional = true },
+  -- CSS: install via `npm install -g vscode-langservers-extracted`
+  cssls = { exe = "vscode-css-language-server", optional = true },
+  -- Emmet (optional): install via `npm install -g emmet-language-server`
+  emmet_language_server = { exe = "emmet-language-server", optional = true },
 
   vimls = { exe = "vim-language-server", optional = true },
   yamlls = { exe = "yaml-language-server", optional = true },

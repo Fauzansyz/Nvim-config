@@ -41,6 +41,7 @@ cmp.setup {
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
   },
   sources = {
+    { name = "codeium" },
     { name = "nvim_lsp" }, -- For nvim-lsp
     { name = "ultisnips" }, -- For ultisnips user.
     { name = "path" }, -- for path completion
@@ -58,6 +59,7 @@ cmp.setup {
     format = function(entry, vim_item)
       -- Add icon to the kind of completion items
       local icon, hl = MiniIcons.get("lsp", vim_item.kind)
+      icon = icon or "🤖"
       vim_item.kind = icon .. " " .. vim_item.kind
       vim_item.kind_hl_group = hl
 

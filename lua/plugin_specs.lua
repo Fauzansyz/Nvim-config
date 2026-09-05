@@ -36,6 +36,27 @@ local plugin_specs = {
       require("config.nvim-cmp")
     end,
   },
+{
+  "nvim-pack/nvim-spectre",
+lazy=true,
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+  },
+      config = function()
+        require("spectre").open_visual({ select_word = true })
+      end,
+  },
+  {
+    "Exafunction/codeium.nvim",
+    event = "BufEnter",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      require("config.codeium")
+    end,
+  },
   -- {
   --   "saghen/blink.cmp",
   --   -- optional: provides snippets for the snippet source

@@ -1,6 +1,12 @@
 local keymap = vim.keymap
 local uv = vim.uv
 
+-- Replace word map
+
+keymap.set("n", "<leader>rw", function()
+  require("spectre").open()
+end, { desc = "Search & Replace" })
+
 -- Save key strokes (now we do not need to press shift to enter command mode).
 keymap.set({ "n", "x" }, ";", ":")
 
