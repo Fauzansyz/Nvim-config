@@ -293,37 +293,6 @@ api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
--- Format JS/TS/JSX/TSX/HTML/CSS files with Prettier on save
-api.nvim_create_autocmd("BufWritePre", {
-  group = api.nvim_create_augroup("prettier_format", { clear = true }),
-  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.html", "*.css" },
-  callback = function(ev)
-    if fn.executable("prettier") == 0 then
-      return
-    end
-
-    local bufnr = ev.buf
-    local file_path = api.nvim_buf_get_name(bufnr)
-    if file_path == "" then
-      return
-    end
-
-    local lines = api.nvim_buf_get_lines(bufnr, 0, -1, false)
-    local input = table.concat(lines, "\n")
-
-    local obj = vim.system({ "prettier", "--stdin-filepath", file_path }, { stdin = input }):wait()
-    if obj.code == 0 and obj.stdout and obj.stdout ~= "" then
-      local view = fn.winsaveview()
-      local formatted_lines = vim.split(obj.stdout, "\n")
-      if formatted_lines[#formatted_lines] == "" then
-        table.remove(formatted_lines)
-      end
-      api.nvim_buf_set_lines(bufnr, 0, -1, false, formatted_lines)
-      fn.winrestview(view)
-    end
-  end,
-})
-
 api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
   group = api.nvim_create_augroup("auto_save", { clear = true }),
   pattern = { "*" },

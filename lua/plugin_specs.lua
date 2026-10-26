@@ -75,6 +75,27 @@ lazy=true,
     "neovim/nvim-lspconfig",
   },
   {
+    "stevearc/conform.nvim",
+    event = { "BufReadPre", "BufNewFile", "BufWritePre" },
+    keys = {
+      {
+        "<space>f",
+        function()
+          require("conform").format({
+            async = true,
+            lsp_format = "fallback",
+            timeout_ms = 5000,
+          })
+        end,
+        mode = "n",
+        desc = "Format buffer",
+      },
+    },
+    config = function()
+      require("config.conform")
+    end,
+  },
+  {
     "dnlhc/glance.nvim",
     config = function()
       require("config.glance")

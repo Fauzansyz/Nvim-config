@@ -60,16 +60,3 @@ if vim.fn.exists(":AsyncRun") == 2 then
     silent = true,
   })
 end
-
--- format current file
-
-local py_fmt_cmd = "!black"
-if py_env == "uv" then
-  py_fmt_cmd = "!uv run black"
-end
-
-local rhs = string.format("<cmd>silent %s %%<CR>", py_fmt_cmd)
-vim.keymap.set("n", "<space>f", rhs, {
-  buffer = true,
-  silent = true,
-})
