@@ -75,6 +75,20 @@ lazy=true,
     "neovim/nvim-lspconfig",
   },
   {
+    "akinsho/flutter-tools.nvim",
+    ft = "dart",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("flutter-tools").setup {
+        lsp = {
+          capabilities = require("lsp_utils").get_default_capabilities(),
+        },
+      }
+    end,
+  },
+  {
     "stevearc/conform.nvim",
     event = { "BufReadPre", "BufNewFile", "BufWritePre" },
     keys = {

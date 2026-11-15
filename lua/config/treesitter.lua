@@ -3,6 +3,7 @@ local nvim_treesitter = require("nvim-treesitter")
 
 local ensure_installed = {
   "cpp",
+  "dart",
   "diff",
   "go",
   "gomod",
