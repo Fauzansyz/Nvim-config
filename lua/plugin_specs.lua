@@ -47,15 +47,22 @@ lazy=true,
       end,
   },
   {
-    "Exafunction/codeium.nvim",
-    event = "BufEnter",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    opts = {
+      suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          accept = "<C-g>",
+          next = "<M-]>",
+          prev = "<M-[>",
+          dismiss = "<M-c>",
+        },
+      },
+      panel = { enabled = false },
     },
-    config = function()
-      require("config.codeium")
-    end,
   },
   -- {
   --   "saghen/blink.cmp",
